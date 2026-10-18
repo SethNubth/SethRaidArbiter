@@ -1,0 +1,14 @@
+## Interface: 30300
+## Title: SethRaidArbiter |cff00FF98by SethNubth|r
+## Notes: Naerzone - DragonUI - Agonia Pincelada Roca Fria - Solo 1ra cuenta
+## Author: SethNubth - Naerzone
+## Version: 1.1 Final Pincelado Naerzone
+## IconTexture: Interface\AddOns\SethRaidArbiter\Media\agonia_rock
+## SavedVariables: SRA_DB
+
+localization.lua
+core.lua
+trinket_icc_sr_toc.lua
+loot_direct.lua
+map_button.lua
+config_dragonui.lua
