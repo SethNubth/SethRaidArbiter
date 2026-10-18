@@ -56,6 +56,15 @@ Para el servidor de Naerzone- Thalasa
 **5. Config Dragonflight UI:**
 - Integración total con tu UI moderna
 
+### 🔗 Compatibilidad
+
+**Compatible con:**
+- **BiS Tool / BiSTooltip:** Detecta automáticamente el Soft Reserve del BiS Tool si lo tienes instalado. (Opcional, no obligatorio)
+- link: https://github.com/disruption01/BiS-Tooltip_335a_backport
+- **AtlasLoot:** Para ver loot de ICC
+- **Dragonflight UI / ElvUI:** 100% compatible con el botón de minimapa
+
+> No es necesario tener BiS Tool, pero si lo tienes, SethRaidArbiter lo lee para el arbitraje de Trinkets ICC SR.
 ---
 
 ### ⌨️ COMANDOS
