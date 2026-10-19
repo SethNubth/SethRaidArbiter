@@ -1,125 +1,57 @@
-# SethRaidArbiter
-Addons WoLK 3.3.5 Naerzon
-# SethRaidArbiter - Naerzone 3.3.5a
-**By SethNubth**
+# SethRaidArbiter | Naerzone Edition v6.2
 
-Addon personalizado para Arbitrar Raids en Naerzone, con texturas exclusivas de Agonía de Escarcha pincelada.
+Arbitraje de Raid WotLK 3.3.5a para Naerzone - SR + Loot Direct + Trinkets ICC + Balance 3W 2DK + Agonía Rock.
 
-### ✨ Características
-- Botón en minimapa con textura `Agonía Roca Fría`
-- Compatible con Dragonflight UI
-- Soporte para Loot Direct y Trinkets ICC SR
-- Texturas TGA en estilo pincelada rock frío
+### Features v6.2
+**1. Arbitraje SR (Soft Reserve)**
+- `/sra` para abrir menú
+- `/sra add [item] [jugador]` 
+- Detección automática de ganadores SR
+- Soporte 1ra cuenta vs ALT: `SRA_IsAlt()` - Agonía solo main
 
-### 📁 Contenido
+**2. Loot Direct Naerzone**
+- Detección épica instantánea `CHAT_MSG_LOOT`
+- Anti-mute 11s de Naerzone
+- Mensaje automático en /BANDA (`RAID`)
 
+**3. Trinkets ICC + Agonía**
+- Control Agonía: Solo 1ra cuenta puede lootear Fragmento de Agonía [45038] y Agonía [50274]
+- Bloqueo automático si es ALT + aviso RAID_WARNING
+- Lista ICC: Testimonio, Escama, etc.
 
-### 📥 Instalación
-1. Descarga el ZIP: Code > Download ZIP
-2. Renombra `SethRaidArbiter-main` a `SethRaidArbiter`
-3. Copiar a `World of Warcraft/Interface/AddOns/`
-4. Activar en la pantalla de AddOns
+**4. Balance Raid**
+- Config: 3W (Warlock) 2DK 1 Demo Lock Obliterado
+- Compensación automática de loot para balance
 
-### 🎨 Créditos
-Texturas pinceladas by SethNubth
-Para el servidor de Naerzone- Thalasa
+### Comandos
+- `/sra` - Menú principal
+- `/sra alt [nombre]` - Marcar como ALT
+- `/sra main [nombre]` - Marcar como Main
+- `/sra ver` - Ver reservas
+- `/sra reset` - Reset raid
 
-> "Forjado en Escarcha - Agonía de Roca Fría"
+### Instalación
+1. Descarga el zip
+2. Descomprime en `World of Warcraft/Interface/AddOns/`
+3. Renombra carpeta a `SethRaidArbiter`
+4. `/reload` en juego
 
-# SethRaidArbiter - By SethNubth
-### Addon de Arbitraje para Naerzone 3.3.5a | Compatible Dragonflight UI
+### Fix Lua Errors v6.2
+- Fix `Menú.lua` -> `Menu.lua` sin acento
+- Fix `Config.lua` case-sensitive
+- Fix `RAID_WARNING` sin permisos -> usa `RAID`
+- `pcall()` en todos los SendChatMessage para 0 errores
 
-> Forjado en la Agonía de Roca Fría - Texturas pinceladas exclusivas.
+### Requisitos
+- WoW 3.3.5a (Interface: 30403)
+- Naerzone
 
----
+### Autor
+Seth - Naerzone
 
-### ✨ CARACTERÍSTICAS PRINCIPALES
+### Changelog
+- **v6.2**: Control Agonía Solo 1ra Cuenta + Fix Banda Español + 0 Lua Errors
+- **v6.1**: Balance 3W 2DK Demo
+- **v6.0**: Trinkets ICC SR
 
-**1. Arbitraje de Raid:**
-- Asignación rápida de loot con ventana de roll / necesidad
-- Detección automática de items épicos ICC 25H
-- Soporte para Soft Reserve (SR) y Loot Direct
-
-**2. Gestión de Trinkets ICC:**
-- Módulo `trinket_icc_sr_toc.lua` para Testamentos, Objetos de Muerte, etc.
-- Previene duplicados y prioriza mains > alts
-
-**3. Loot Direct:**
-- Entrega directa sin trade window para Naerzone
-- Comando de susurro automático al ganador
-
-**4. Botón Minimapa:**
-- Textura exclusiva `Media/agonia_rock.tga` estilo pincelada Roca Fría
-- Arrastrable, se adapta a cualquier forma de minimapa (ElvUI / Dragonflight UI)
-- Click Izq: Abrir panel / Click Der: Config
-
-**5. Config Dragonflight UI:**
-- Integración total con tu UI moderna
-
-### 🔗 Compatibilidad
-
-**Compatible con:**
-- **BiS Tool / BiSTooltip:** Detecta automáticamente el Soft Reserve del BiS Tool si lo tienes instalado. (Opcional, no obligatorio)
-- link: https://github.com/disruption01/BiS-Tooltip_335a_backport
-- **AtlasLoot:** Para ver loot de ICC
-- **Dragonflight UI / ElvUI:** 100% compatible con el botón de minimapa
-
-> No es necesario tener BiS Tool, pero si lo tienes, SethRaidArbiter lo lee para el arbitraje de Trinkets ICC SR.
----
-
-### ⌨️ COMANDOS
-
-Todos los comandos funcionan con `/sra`, `/sethraid` y `/raidarbiter`
-
-| Comando | Descripción |
-| :--- | :--- |
-| `/sra` | Abre el panel principal del árbitro |
-| `/sra show` | Muestra la ventana de loot actual |
-| `/sra hide` | Oculta el panel |
-| `/sra config` | Abre configuración Dragonflight UI |
-| `/sra reset` | Reinicia posición del botón del minimapa |
-| `/sra loot` | Fuerza el escaneo de loot del boss |
-| `/sra sr` | Muestra la lista de Soft Reserve del raid |
-| `/sra announce` | Anuncia el ganador en /ra y susurro |
-
----
-
-### 📖 FORMA DE USO ADECUADO (Guía para Árbitro)
-
-**Paso 1: Antes de Raid**
-1. Activa el addon en la pantalla de AddOns
-2. Escribe `/sra config` y coloca el botón donde quieras
-3. Si usas SR, importa la lista de tu hermandad
-
-**Paso 2: Durante Boss**
-1. Al morir el boss, el addon detecta el loot automático
-2. Se abre la ventana de arbitraje con los items
-3. Los jugadores hacen roll o escriben su SR
-
-**Paso 3: Asignar Loot**
-1. Selecciona al ganador en la lista
-2. Click en `Asignar` -> El addon hará `/loot` y susurrará al ganador
-3. Si es item ligable, usa `Loot Direct` para entrega instantánea
-
-**Paso 4: Trinkets ICC SR**
-- El sistema bloquea automáticamente si un jugador ya tiene 2 testamentos, etc.
-- Respeta la lista SR de `trinket_icc_sr`
-
-**Tip de SethNubth:** Usa Click Derecho en el botón de Agonía para modo silencioso en raids de hermandad.
-
----
-
-### 📥 INSTALACIÓN
-
-1. Descarga: `Code > Download ZIP`
-2. Renombra `SethRaidArbiter-main` a `SethRaidArbiter`
-3. Copiar a `Interface/AddOns/`
-4. Texturas en `Media/*.tga` deben quedar dentro
-
-### 🎨 TEXTURAS INCLUIDAS
-- `agonia_rock.tga` - Principal (Roca Fría)
-- `agonia_pincelado.tga` - Edición pincelada exclusiva
-- `agonia_retail.tga` / `agonia_minimap.tga` / `agonia_splash.tga`
-
----
-**By SethNubth for Naerzone - 2026**
+¡GL en ICC 25H!
