@@ -1,18 +1,16 @@
 ## Interface: 30403
 ## Title: SethRaidArbiter |cffff0000Naerzone Edition|r
 ## Notes: Arbitraje Raid + SR + Loot Direct + Trinkets ICC + Balance 3W 2DK Demo Obli + Agonia Rock
-## Author: Seth
+## Author: SethNubth
 ## Version: 6.2
 ## SavedVariables: SRA105DB
-## OptionalDeps: GearScoreLite, BugSack
+## SavedVariablesPerCharacter: SRA105CharDB
 
-Libs\LibStub\LibStub.lua
-Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
-
+localization.lua
 SethRaidArbiter.lua
-Menu.lua
 Trinkets.lua
 Loot.lua
 DirectLoot.lua
+Menu.lua
 Minimap.lua
-Config.lua
+config.lua
