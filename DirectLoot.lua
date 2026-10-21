@@ -22,28 +22,27 @@ function SRA_DirectLoot(player, itemID)
     
     local link=SRA_GetItemLinkSafe(itemID)
     
-    pcall(function()
-        if IsInRaid() then
+    -- RAID_WARNING solo si eres lead/officer
+    if IsInRaid() then
+        if IsRaidLeader() or IsRaidOfficer() then
             SendChatMessage(">> Ganaste "..link.." - "..player.." - Loot Direct <<", "RAID_WARNING")
-            SendChatMessage("Ganaste "..link.." - "..player, "RAID")
         end
-        SendChatMessage("Ganaste "..link.." - Loot Direct Naerzone activo - Tradeame", "WHISPER", nil, player)
-        print("|cFF00FF00Seth: Direct Loot "..player.." -> "..link.."|r")
-    end)
+        SendChatMessage("Ganaste "..link.." - "..player, "RAID")
+    end
+    SendChatMessage("Ganaste "..link.." - Loot Direct Naerzone activo - Tradeame", "WHISPER", nil, player)
+    print("|cFF00FF00Seth: Direct Loot "..player.." -> "..link.."|r")
 end
 
 function SRA_FinishRoll(itemID)
     if not itemID then return end
     SRA_SRReserve = SRA_SRReserve or {}
     
-    pcall(function()
-        for p,res in pairs(SRA_SRReserve) do
-            if tostring(res)==tostring(itemID) then 
-                SRA_DirectLoot(p,itemID) 
-                SRA_SRReserve[p]=nil -- limpia SR
-                return 
-            end
+    for p,res in pairs(SRA_SRReserve) do
+        if tostring(res)==tostring(itemID) then 
+            SRA_DirectLoot(p,itemID) 
+            SRA_SRReserve[p]=nil
+            return 
         end
-        print("|cFFFFFF00Seth: Nadie reservo item "..tostring(itemID).."|r")
-    end)
+    end
+    print("|cFFFFFF00Seth: Nadie reservo item "..tostring(itemID).."|r")
 end
