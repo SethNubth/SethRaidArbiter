@@ -13,4 +13,5 @@ Loot.lua
 DirectLoot.lua
 Menu.lua
 Minimap.lua
+SpamBuilder.lua
 SethRaidArbiter.lua
