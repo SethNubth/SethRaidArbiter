@@ -39,15 +39,17 @@ lootF:SetScript("OnEvent", function(self,event,msg)
   if now - lastAlert < 11 then return end
   lastAlert = now
   
-  pcall(function()
-      local _,link=GetItemInfo(numId)
-      local out = link or ("|cFFa335ee|Hitem:"..numId.."::::::::80:::::|h[Item:"..numId.."]|h|r")
-      if IsInRaid() then
-          SendChatMessage("EPICO DETECTADO: "..out.." - Preparando roll SR [Seth v6.2]","RAID")
-      else
-          print("Seth: Epico: "..out)
-      end
-  end)
+  -- GetItemInfo puede ser nil si no está cacheado
+  local itemName, link = GetItemInfo(numId)
+  if not link then
+      link = "|cFFa335ee|Hitem:"..numId.."::::::::80:::::|h["..(itemName or "Item:"..numId).."]|h|r"
+  end
+  
+  if IsInRaid() then
+      SendChatMessage("EPICO DETECTADO: "..link.." - Preparando roll SR [Seth v6.2]","RAID")
+  else
+      print("Seth: Epico: "..link)
+  end
 end)
 
 print("|cFF00FF00Seth: Loot scan 11s OK|r")
