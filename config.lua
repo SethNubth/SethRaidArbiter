@@ -42,8 +42,8 @@ function SRA_ShowConfig()
   cb2:SetChecked(SRA105DB.offKick == nil and true or SRA105DB.offKick)
   cb2:SetScript("OnClick", function(self) SRA105DB.offKick = self:GetChecked() end)
   
-  -- Slider: GS minimo
-  local slider = CreateFrame("Slider", nil, SRAConfig, "OptionsSliderTemplate")
+  -- Slider: GS minimo - FIX NOMBRE
+  local slider = CreateFrame("Slider", "SRA_GS_Slider", SRAConfig, "OptionsSliderTemplate")
   slider:SetPoint("TOPLEFT", 20, -150)
   slider:SetSize(200, 20)
   slider:SetMinMaxValues(5000, 6000)
