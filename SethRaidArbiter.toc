@@ -1,17 +1,16 @@
 ## Interface: 30300
-## Title: SethRaidArbiter |cffff0000Naerzone Edition|r
-## Notes: Arbitraje Raid + SR + Loot Direct + Trinkets ICC + Balance 3W 2DK Demo Obli + Agonia Rock
-## Author: SethNubth
-## Version: 6.2
-## SavedVariables: SRA105DB
-## SavedVariablesPerCharacter: SRA105CharDB
-
-localization.lua
-config.lua
-Trinkets.lua
+## Title: |cffff8000SethRaidArbiter|r |cff00ff00v7.0 EPGP GOD|r
+## Notes: Master Guild EPGP Full - Anti-mute 11s Taberna 6578 + SR DirectLoot + 35x3 BIS + KRT UI
+## Author: Seth + Kader Hybrid + EPGP Master
+## Version: 7.0.0 EPGP Full
+## SavedVariables: SRA_DB, SRA_Options, SRA_Raids, SRA_SR, SRA_105DB, SRA_EPGPLog
+## OptionalDeps: EPGP, EPGP_LootMaster
+Templates.xml
+SethRaidArbiter.xml
+Utils.lua
+Core.lua
 Loot.lua
 DirectLoot.lua
-Menu.lua
-Minimap.lua
 SpamBuilder.lua
-SethRaidArbiter.lua
+Menu.lua
+EPGP_Bridge.lua
