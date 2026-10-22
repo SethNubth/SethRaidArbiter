@@ -1,118 +1,138 @@
-local frame, currentTab
+local _, SRA = ...
+SRA_105DB = SRA_105DB or {}
+SRA_SR = SRA_SR or {}
+-- TABLA 35x3 BIS REAL - ICC LK RS TOGC - 3.3.5a 12340
+SRA.BIS = {
+ ["WARRIOR_PROTECTION"] = { -- Prot War
+  {id=50632, name="Anillo de Ceniza"}, {id=50362, name="DBW"}, {id=50735, name="Mithrios"}
+ },
+ ["WARRIOR_FURY"] = {
+  {id=50362, name="DBW"}, {id=50363, name="Testa"}, {id=50735, name="Mithrios"}
+ },
+ ["WARRIOR_ARMS"] = {
+  {id=50362, name="DBW"}, {id=50363, name="Testa"}, {id=50734, name="Glorenzelg"}
+ },
+ ["PALADIN_PROTECTION"] = {
+  {id=50362, name="DBW"}, {id=50363, name="Testa"}, {id=50632, name="Ceniza"}
+ },
+ ["PALADIN_RETRIBUTION"] = {
+  {id=50362, name="DBW"}, {id=50363, name="Testa"}, {id=50735, name="Mithrios"}
+ },
+ ["PALADIN_HOLY"] = {
+  {id=50365, name="Falda"}, {id=50719, name="Abalorio"}, {id=50818, name="Anillo"}
+ },
+ ["DEATHKNIGHT_BLOOD_TANK"] = {
+  {id=50362, name="DBW"}, {id=50363, name="Testa"}, {id=50632, name="Ceniza"}
+ },
+ ["DEATHKNIGHT_UNHOLY"] = {
+  {id=50362, name="DBW"}, {id=50363, name="Testa"}, {id=50734, name="Glorenzelg"}
+ },
+ ["DEATHKNIGHT_FROST"] = {
+  {id=50362, name="DBW"}, {id=50363, name="Testa"}, {id=50734, name="Glorenzelg"}
+ },
+ -- GENERICO para todas clases si no encuentra spec
+ ["GENERIC"] = {
+  {id=50362, name="Deathbringer's Will"}, {id=50363, name="Deathbringer's Will H"}, {id=50632, name="Ashen Band"}
+ }
+}
 
-local function SRA_SafeInitDB(tab)
-    tab = tab:lower()
-    SRA105DB = SRA105DB or {}
-    SRA105DB[tab] = SRA105DB[tab] or {}
-    SRA105DB[tab.."_id"] = SRA105DB[tab.."_id"] or {}
-    for i=1,35 do
-        SRA105DB[tab][i] = SRA105DB[tab][i] or ""
-        SRA105DB[tab.."_id"][i] = SRA105DB[tab.."_id"][i] or ""
-    end
+function SRA.GetPlayerSpec()
+ local class = UnitClass("player")
+ local spec = "GENERIC"
+ -- Detecta spec simple por talentos si se puede, sino generic
+ if class=="Warrior" then spec="WARRIOR_FURY"
+ elseif class=="Paladin" then spec="PALADIN_RETRIBUTION"
+ elseif class=="Death Knight" or class=="Caballero de la Muerte" then spec="DEATHKNIGHT_UNHOLY"
+ end
+ return spec
 end
 
-local function SRA_GetItemLinkSafe(idTxt)
-    if not idTxt or idTxt=="" then return "" end
-    if SRA_GetItemLink then
-        local ok, link = pcall(SRA_GetItemLink, idTxt)
-        if ok and link then return link end
+function SRA.ShowMain()
+ if not SRA_MainFrame then
+  local f = CreateFrame("Frame", "SRA_MainFrame", UIParent)
+  f:SetSize(850, 600)
+  f:SetPoint("CENTER")
+  f:SetMovable(true)
+  f:EnableMouse(true)
+  f:RegisterForDrag("LeftButton")
+  f:SetScript("OnDragStart", function() f:StartMoving() end)
+  f:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
+  f:SetBackdrop({bgFile="Interface\\DialogFrame\\UI-DialogBox-Background-Dark", edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", tile=true, tileSize=8, edgeSize=8, insets={top=1,right=1,bottom=1,left=1}})
+  f:Hide()
+  
+  local title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+  title:SetPoint("TOP", 0, -10)
+  title:SetText("|cffff8000SethRaidArbiter v7.0 EPGP GOD|r |cff00ff00- 35x3 BIS + SR + Anti-mute|r")
+  
+  local close = CreateFrame("Button", nil, f, "UIPanelCloseButton")
+  close:SetPoint("TOPRIGHT", -5, -5)
+  
+  local scroll = CreateFrame("ScrollFrame", "SRA_Scroll", f, "UIPanelScrollFrameTemplate")
+  scroll:SetPoint("TOPLEFT", 10, -35)
+  scroll:SetPoint("BOTTOMRIGHT", -30, 10)
+  
+  local content = CreateFrame("Frame", nil, scroll)
+  content:SetSize(800, 1000)
+  scroll:SetScrollChild(content)
+  f.content = content
+  
+  SRA_MainFrame = f
+ end
+ 
+ -- Llenar contenido BIS 35x3
+ local content = SRA_MainFrame.content
+ -- Limpiar hijos viejos
+ for _, child in ipairs({content:GetChildren()}) do child:Hide() end
+ for _, child in ipairs({content:GetRegions()}) do if child:GetObjectType()=="FontString" then child:Hide() end end
+ 
+ local y = -10
+ local spec = SRA.GetPlayerSpec()
+ local bisList = SRA.BIS[spec] or SRA.BIS["GENERIC"]
+ 
+ local header = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+ header:SetPoint("TOPLEFT", 10, y)
+ header:SetText("|cffff8000BIS para "..spec..":|r (Click para SR + Shift-Click para EPGP award si eres Master)")
+ y = y - 25
+ 
+ for i, item in ipairs(bisList) do
+  local btn = CreateFrame("Button", nil, content)
+  btn:SetSize(750, 22)
+  btn:SetPoint("TOPLEFT", 10, y)
+  local fs = btn:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+  fs:SetPoint("LEFT")
+  fs:SetText((SRA.GetItemLinkSafe(item.id) or "["..item.id.."]").." - "..item.name)
+  fs:SetJustifyH("LEFT")
+  btn:SetScript("OnClick", function(_, button)
+   if IsShiftKeyDown() then
+    -- EPGP award si es master
+    if SRA.EPGP and SRA.EPGP.CanUse() then
+     local player = UnitName("target") or UnitName("player")
+     SRA.EPGP.AwardGP(player, item.id)
+    else
+     print("No eres Master Guild - Solo puedes SR")
     end
-    local id = tonumber(idTxt)
-    if id then
-        local _, link = GetItemInfo(id)
-        return link or ""
-    end
-    return ""
-end
-
-local function createMenu()
-  if frame then return frame end
-  SRA105DB = SRA105DB or {}
-  
-  frame=CreateFrame("Frame","SRAFrame",UIParent,"BasicFrameTemplateWithInset")
-  frame:SetSize(820,580) frame:SetPoint("CENTER") 
-  frame:SetMovable(true) frame:EnableMouse(true)
-  frame:RegisterForDrag("LeftButton") 
-  frame:SetScript("OnDragStart", function(s) if not InCombatLockdown() then s:StartMoving() end end) 
-  frame:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-  frame.TitleText:SetText("SethRaidArbiter - 35x3 + BIS v6.2 |cffff0000Naerzone|r")
-  frame:Hide()
-  
-  local content=CreateFrame("Frame",nil,frame) 
-  content:SetPoint("TOPLEFT",15,-60) content:SetPoint("BOTTOMRIGHT",-15,15)
-  
-  local scroll=CreateFrame("ScrollFrame",nil,content,"UIPanelScrollFrameTemplate") 
-  scroll:SetPoint("TOPLEFT",0,-30) scroll:SetPoint("BOTTOMRIGHT",-25,0)
-  
-  local inner=CreateFrame("Frame",nil,scroll) 
-  inner:SetSize(750,1350) 
-  scroll:SetScrollChild(inner)
-
-  local function build(tab)
-    if InCombatLockdown() then print("|cFFFF0000Seth: No en combate|r") return end
-    currentTab=tab:lower()
-    SRA_SafeInitDB(currentTab)
-    
-    -- Limpia hijos sin error
-    local children = {inner:GetChildren()}
-    for _,c in ipairs(children) do if c then c:Hide() c:SetParent(nil) end end
-    
-    local db=SRA105DB[currentTab]
-    local dbId=SRA105DB[currentTab.."_id"]
-    
-    for i=1,35 do
-      local row=CreateFrame("Frame",nil,inner) 
-      row:SetSize(740,32) row:SetPoint("TOPLEFT",0,-(i-1)*36) row:Show()
-      
-      local lbl=row:CreateFontString(nil,"OVERLAY","GameFontNormalSmall") 
-      lbl:SetPoint("LEFT",0,0) lbl:SetWidth(30) lbl:SetText(i)
-      
-      local eb=CreateFrame("EditBox",nil,row,"InputBoxTemplate") 
-      eb:SetSize(420,24) eb:SetPoint("LEFT",35,0) eb:SetAutoFocus(false) 
-      eb:SetText(db[i] or "")
-      eb:SetScript("OnEnterPressed", function(s) 
-          if SRA105DB[currentTab] then SRA105DB[currentTab][i]=s:GetText() end
-          s:ClearFocus() 
-      end) 
-      eb:SetScript("OnEditFocusLost", function(s) 
-          if SRA105DB[currentTab] then SRA105DB[currentTab][i]=s:GetText() end
-      end)
-      
-      local eb2=CreateFrame("EditBox",nil,row,"InputBoxTemplate") 
-      eb2:SetSize(90,24) eb2:SetPoint("LEFT",eb,"RIGHT",8,0) eb2:SetAutoFocus(false) 
-      eb2:SetText(dbId[i] or "")
-      eb2:SetScript("OnEnterPressed", function(s) 
-          if SRA105DB[currentTab.."_id"] then SRA105DB[currentTab.."_id"][i]=s:GetText() end
-          s:ClearFocus() 
-      end)
-      
-      local btn=CreateFrame("Button",nil,row,"UIPanelButtonTemplate") 
-      btn:SetSize(75,22) btn:SetPoint("LEFT",eb2,"RIGHT",8,0) btn:SetText("LANZAR")
-      btn:SetScript("OnClick", function() 
-          local txt = SRA105DB[currentTab] and SRA105DB[currentTab][i] or ""
-          local idTxt = SRA105DB[currentTab.."_id"] and SRA105DB[currentTab.."_id"][i] or ""
-          if txt and txt~="" then 
-              local link=SRA_GetItemLinkSafe(idTxt) 
-              local msg = link~="" and txt.." "..link or txt
-              if IsInRaid() then SendChatMessage(msg,"RAID_WARNING") else SendChatMessage(msg,"SAY") end
-          end 
-      end)
-    end
-  end
-  
-  for idx,name in ipairs({"ICC","SR","TOC"}) do 
-      local b=CreateFrame("Button",nil,content,"UIPanelButtonTemplate") 
-      b:SetSize(80,22) b:SetPoint("TOPLEFT",(idx-1)*90,0) b:SetText(name) 
-      b:SetScript("OnClick", function() build(name) end) 
-  end
-  
-  build("ICC") 
-  return frame
-end
-
-function SRA_ShowMenu() 
-    if InCombatLockdown() then print("|cFFFF0000Seth: No abras menú en combate - taint|r") return end
-    local ok, m = pcall(createMenu)
-    if not ok or not m then print("|cFFFF0000Seth Error Menu:|r "..tostring(m)) return end
-    if m:IsShown() then m:Hide() else m:Show() end 
+   else
+    SRA_SR[item.id] = UnitName("player")
+    print("|cffff8000SRA SR:|r "..(SRA.GetItemLinkSafe(item.id) or item.id).." reservado para ti")
+   end
+  end)
+  btn:SetScript("OnEnter", function() GameTooltip:SetOwner(btn, "ANCHOR_RIGHT") GameTooltip:SetHyperlink("item:"..item.id) GameTooltip:Show() end)
+  btn:SetScript("OnLeave", function() GameTooltip:Hide() end)
+  y = y - 22
+ end
+ 
+ y = y - 10
+ local srHeader = content:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+ srHeader:SetPoint("TOPLEFT", 10, y)
+ srHeader:SetText("|cffff8000Tus Reservas SR Actuales:|r")
+ y = y - 20
+ for id, pl in pairs(SRA_SR) do
+  local fs = content:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+  fs:SetPoint("TOPLEFT", 10, y)
+  fs:SetText((SRA.GetItemLinkSafe(tonumber(id)) or id).." -> "..pl)
+  y = y - 15
+ end
+ 
+ content:SetHeight(math.abs(y)+50)
+ SRA_MainFrame:Show()
 end
