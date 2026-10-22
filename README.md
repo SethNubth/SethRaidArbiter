@@ -38,6 +38,12 @@ Tú escribes lo que deseas armar. 100% configurable. Con botón ON/OFF para evit
 **Desde Comando:**
 - `/spambuilder` - Abre el builder
 - `/sraarmar` - Alias
+- `/sra` -> botón `SPAM BUILDER` en menú
+- `/spambuilder` o `/armar` -> abrir builder
+- `RESET` -> vuelve a ICC 25N 5 4 3 2
+- `CLEAR` -> borra todo para escribir nuevo
+- `STOP` -> apaga emergencia
+- `/srareset` `/sraclear` `/srastop` -
 
 **Ejemplo de uso:**
 Raid: ICC
