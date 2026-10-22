@@ -1,7 +1,3 @@
-Aquí tienes el README GOD nivel CurseForge - Profesional, con badges y todo para que lo aprueben de una.
-
-Copia y pega esto como `README.md` en tu GitHub:
-
 ---
 SethRaidArbiter - Spam Builder
 
