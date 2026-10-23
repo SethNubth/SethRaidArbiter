@@ -36,14 +36,22 @@ Tú escribes lo que deseas armar. 100% configurable. Con botón ON/OFF para evit
 3. Click `ENVIAR SPAM: OFF` -> Cambia a `ON` y empieza a spamear
 
 **Desde Comando:**
-- `/spambuilder` - Abre el builder
-- `/sraarmar` - Alias
-- `/sra` -> botón `SPAM BUILDER` en menú
-- `/spambuilder` o `/armar` -> abrir builder
-- `RESET` -> vuelve a ICC 25N 5 4 3 2
-- `CLEAR` -> borra todo para escribir nuevo
-- `STOP` -> apaga emergencia
-- `/srareset` `/sraclear` `/srastop` -
+COMANDOS PRINCIPALES:
+/sra - Abre menú principal BIS 35x3 + SR
+/sra config - Abre config
+/sra minimap - Resetea icono martillo al minimapa
+SPAM BUILDER (Armar raid):
+/spambuilder - Abre builder (TU ESCRIBES lo que quieres armar)
+/sraarmar - Alias
+/armar - Alias corto
+/sra stop - Apaga spam inmediato
+/srastop - Apaga spam
+/srareset - Reset a ICC 25N default (5 mele 4 caster 3 heal 2 tank GS 5.5)
+/sraclear - Vacía todo
+#### Dentro del SpamBuilder:
+-Click GENERAR = Crea textoClick
+-ENVIAR SPAM: OFF/ON = Empieza cada 11s Taberna + General (Anti-mute Naerzone)
+RESET / CLEAR / STOP = Limpia.
 
 **Ejemplo de uso:**
 Raid: ICC
@@ -63,6 +71,15 @@ Mele: 0
 Caster: 2
 Genera:
 > `Se arma Archavon10: Need: 2 Caster GS: 5k`
+> EPGP (Master Guild):
+/sraepgp - Abre EPGP
+/sraepgp award [player] [itemID] - Descuenta GP
+/sraepgp decay 10% - Decay a toda la guild
+> LOOT MASTER
+/srasr - Lista tus reservas
+/srasr add [player] [itemID] - Reserva manual
+/srasr del [player] - Borra reserva
+/sratrinket test 50362 - Test si es DBW/Testamento/etc
 
 **¡Tú escribes lo que quieras armar!** SR 25N, TOC 25H, SEMPITERNAL, lo que sea.
 
