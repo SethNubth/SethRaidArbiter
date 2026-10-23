@@ -1,5 +1,5 @@
--- SpamBuilder.lua - SethRaidArbiter v8.4.2 FINAL GOD
--- Menu + ON/OFF + Reset + Clear + Auto Taberna /5-/8
+-- SpamBuilder.lua - SethRaidArbiter v8.4.3 FINAL MOVIBLE GOD
+-- Menu + ON/OFF + Reset + Clear + Auto Taberna /5-/8 - FIX 3.3.5a
 
 SRA105DB = SRA105DB or {}
 local spamBuilderFrame = nil
@@ -7,6 +7,38 @@ local lastSpamTime = 0
 local ANTI_MUTE_DELAY = 11
 local spamActivo = false
 local spamTicker = nil
+
+-- FIX GOD C_Timer para 3.3.5a
+if not C_Timer then C_Timer = {} end
+if not C_Timer.After then
+  function C_Timer.After(delay, func)
+    local f=CreateFrame("Frame")
+    local t=0
+    f:SetScript("OnUpdate", function(self, e)
+      t=t+e
+      if t>=delay then
+        self:SetScript("OnUpdate", nil)
+        self:Hide()
+        pcall(func)
+      end
+    end)
+    f:Show()
+  end
+end
+if not C_Timer.NewTicker then
+  function C_Timer.NewTicker(delay, func)
+    local f=CreateFrame("Frame")
+    local t=0
+    f:SetScript("OnUpdate", function(self, e)
+      t=t+e
+      if t>=delay then
+        t=0
+        pcall(func)
+      end
+    end)
+    return {Cancel=function() f:SetScript("OnUpdate", nil) f:Hide() end}
+  end
+end
 
 -- === DETECTA TABERNA NAERZONE /5-/8 ===
 local function SRA_GetTabernaChannel()
@@ -55,8 +87,11 @@ function SRA_StartSpam(text)
     local msg = text or SRA_BuildSpamText()
     local tabChan = SRA_GetTabernaChannel()
     if tabChan then SendChatMessage(msg, "CHANNEL", nil, tabChan) end
-    local genChan = GetChannelName("2. General") or 2
-    SendChatMessage(msg, "CHANNEL", nil, genChan)
+    -- FIX: General es canal 1 en Naerzone, no 2
+    local genChan = GetChannelName(1)
+    if genChan and genChan ~= 0 then
+      SendChatMessage(msg, "CHANNEL", nil, genChan)
+    end
 end
 
 function SRA_StopSpam()
@@ -75,7 +110,7 @@ function SRA_ToggleSpam()
         spamTicker = C_Timer.NewTicker(ANTI_MUTE_DELAY, function() SRA_StartSpam() end)
         if _G["SRA_Spam_ToggleBtn"] then _G["SRA_Spam_ToggleBtn"]:SetText("ENVIAR SPAM: ON") _G["SRA_Spam_ToggleBtn"]:SetTextColor(0,1,0) end
         if _G["SRA_Spam_Status"] then _G["SRA_Spam_Status"]:SetText("|cff00ff00● ENVIADO - Cada 11s Taberna /"..(SRA_GetTabernaChannel() or "?").." + General|r") end
-        print("|cff00ff00SRA:|r Spam ENCENDIDO")
+        print("|cff00ff00SRA:|r Spam ENCENDIDO - Anti-mute 11s GOD")
     else
         SRA_StopSpam()
     end
@@ -105,18 +140,29 @@ function SRA_ClearSpamBuilder()
     if _G["SRA_Spam_GS"] then _G["SRA_Spam_GS"]:SetText("") end
     SRA_StopSpam()
     if _G["SRA_Spam_Preview"] then _G["SRA_Spam_Preview"]:SetText("") end
-    print("|cffff8000SRA:|r Clear -> Todo vacío")
+    print("|cffff8000SRA:|r Clear -> Todo vacio")
 end
 
--- === FRAME PRINCIPAL ===
+-- === FRAME PRINCIPAL - FIX 3.3.5a ===
 function SRA_ShowSpamBuilder()
     if spamBuilderFrame then if spamBuilderFrame:IsShown() then spamBuilderFrame:Hide() else spamBuilderFrame:Show() end return end
-    local f = CreateFrame("Frame", "SRA_SpamBuilderFrame", UIParent, "BasicFrameTemplateWithInset")
-    f:SetSize(620, 320) f:SetPoint("CENTER") f:SetMovable(true) f:EnableMouse(true) f:RegisterForDrag("LeftButton")
-    f:SetScript("OnDragStart", function(s) s:StartMoving() end) f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
-    f.TitleText:SetText("Seth Spam Builder v8.4.2 - FINAL GOD") spamBuilderFrame = f
+    -- FIX GOD: BasicFrameTemplateWithInset NO EXISTE en 3.3.5a
+    local f = CreateFrame("Frame", "SRA_SpamBuilderFrame", UIParent, "BasicFrameTemplate")
+    f:SetSize(620, 320) 
+    f:SetPoint("CENTER") 
+    f:SetMovable(true) 
+    f:EnableMouse(true) 
+    f:RegisterForDrag("LeftButton")
+    f:SetScript("OnDragStart", function(s) s:StartMoving() end) 
+    f:SetScript("OnDragStop", function(s) s:StopMovingOrSizing() end)
+    f:SetClampedToScreen(true)
+    f:SetFrameStrata("HIGH")
+    if f.TitleText then f.TitleText:SetText("Seth Spam Builder v8.4.3 - FINAL MOVIBLE GOD") end
+    spamBuilderFrame = f
+    
     local function CreateLabel(text, x, y) local lbl = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall") lbl:SetPoint("TOPLEFT", 15 + x, -35 + y) lbl:SetText(text) return lbl end
     local function CreateEdit(name, w, x, y, default) local eb = CreateFrame("EditBox", name, f, "InputBoxTemplate") eb:SetSize(w, 24) eb:SetPoint("TOPLEFT", 15 + x, -50 + y) eb:SetAutoFocus(false) eb:SetText(default or "") eb:SetScript("OnTextChanged", function() SRA_BuildSpamText() end) return eb end
+    
     CreateLabel("Raid:", 0, 0) CreateEdit("SRA_Spam_Raid", 70, 0, -15, "ICC")
     CreateLabel("Modo:", 80, 0) CreateEdit("SRA_Spam_Mode", 50, 80, -15, "25N")
     CreateLabel("Mele:", 145, 0) CreateEdit("SRA_Spam_Melee", 35, 145, -15, "5")
@@ -124,7 +170,7 @@ function SRA_ShowSpamBuilder()
     CreateLabel("Heal:", 235, 0) CreateEdit("SRA_Spam_Heal", 35, 235, -15, "3")
     CreateLabel("Tank:", 280, 0) CreateEdit("SRA_Spam_Tank", 35, 280, -15, "2")
     CreateLabel("GS:", 325, 0) CreateEdit("SRA_Spam_GS", 45, 325, -15, "5.5")
-    CreateLabel("Preview (Tú escribes lo que deseas armar):", 0, -50)
+    CreateLabel("Preview (Tu escribes lo que deseas armar):", 0, -50)
     local preview = CreateFrame("EditBox", "SRA_Spam_Preview", f, "InputBoxTemplate") preview:SetSize(580, 24) preview:SetPoint("TOPLEFT", 15, -100) preview:SetAutoFocus(false) preview:SetText("Se arma ICC25N: Need: 5 Meles 4 Caster 3 Heal 2 Tanke GS: 5.5 12/25")
     local status = f:CreateFontString("SRA_Spam_Status", "OVERLAY", "GameFontNormalBold") status:SetPoint("TOPLEFT", 15, -130) status:SetText("|cffff0000● APAGADO - No spamea|r")
     local btnToggle = CreateFrame("Button", "SRA_Spam_ToggleBtn", f, "UIPanelButtonTemplate") btnToggle:SetSize(200, 36) btnToggle:SetPoint("TOPLEFT", 15, -150) btnToggle:SetText("ENVIAR SPAM: OFF") btnToggle:GetFontString():SetTextColor(1,0,0) btnToggle:SetScript("OnClick", SRA_ToggleSpam)
@@ -132,7 +178,7 @@ function SRA_ShowSpamBuilder()
     local btnReset = CreateFrame("Button", nil, f, "UIPanelButtonTemplate") btnReset:SetSize(80, 28) btnReset:SetPoint("TOPLEFT", 315, -150) btnReset:SetText("RESET") btnReset:SetScript("OnClick", SRA_ResetSpamBuilder)
     local btnClear = CreateFrame("Button", nil, f, "UIPanelButtonTemplate") btnClear:SetSize(80, 28) btnClear:SetPoint("TOPLEFT", 405, -150) btnClear:SetText("CLEAR") btnClear:SetScript("OnClick", SRA_ClearSpamBuilder)
     local btnStop = CreateFrame("Button", nil, f, "UIPanelButtonTemplate") btnStop:SetSize(70, 28) btnStop:SetPoint("TOPLEFT", 495, -150) btnStop:SetText("STOP") btnStop:SetScript("OnClick", SRA_StopSpam)
-    local help = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall") help:SetPoint("TOPLEFT", 15, -195) help:SetText("|cffaaaaaa/sra = Menú | /spambuilder = Abrir | /srareset = Reset | /sraclear = Vaciar | /sra stop = Apagar|r")
+    local help = f:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall") help:SetPoint("TOPLEFT", 15, -195) help:SetText("|cffaaaaaa/sra = Menu | /spambuilder = Abrir | /srareset = Reset | /sraclear = Vaciar | /sra stop = Apagar|r")
     f:Show()
 end
 
@@ -169,4 +215,4 @@ end
 SLASH_SRASTOP1 = "/srastop"
 SlashCmdList["SRASTOP"] = function() SRA_StopSpam() end
 
-print("|cffff8000SethRaidArbiter v8.4.2 GOD cargado: /sra | /spambuilder | /srareset | /sraclear|r")
+print("|cffff8000SethRaidArbiter v8.4.3 GOD MOVIBLE FIX cargado: /sra | /spambuilder | /srareset | /sraclear|r")
