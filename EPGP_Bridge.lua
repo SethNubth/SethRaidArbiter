@@ -2,12 +2,14 @@ local _, SRA = ...
 SRA.EPGP = {}
 SRA_EPGPLog = SRA_EPGPLog or {}
 SRA_Options = SRA_Options or {}
+
 -- Precios GP tu guild - AJUSTA SEGUN TU GUILD
 SRA.EPGP.Prices = {
  [40395]=1500, [50362]=2000, [50363]=2200, [50734]=3000, [50735]=3000, [50736]=3000,
  [50632]=2500, [50818]=2200, [50819]=2200, [50340]=1800, [50341]=1800, [50342]=1800,
  [50365]=1500, [50719]=2000, [50182]=2000,
 }
+
 function SRA.EPGP.IsMaster()
  if not IsInGuild() then return false end
  if IsGuildLeader() then return true end
@@ -16,10 +18,12 @@ function SRA.EPGP.IsMaster()
  if rankIndex and rankIndex <=1 then return true end
  return false
 end
+
 function SRA.EPGP.CanUse()
  if not SRA_Options.isLeader then return false end
  return SRA.EPGP.IsMaster()
 end
+
 function SRA.EPGP.GetPlayerEPGP(player)
  if not EPGP or not EPGP.GetEPGP then return nil end
  local EP, GP, main = EPGP:GetEPGP(player)
@@ -28,6 +32,7 @@ function SRA.EPGP.GetPlayerEPGP(player)
  if GP and GP>0 then PR=EP/GP else PR=EP end
  return EP, GP, PR
 end
+
 function SRA.EPGP.AwardGP(player, itemID, customGP)
  if not SRA.EPGP.CanUse() then
   print("|cffff0000SRA EPGP:|r No tienes Rango Master/Oficial Guild para descontar EPGP")
@@ -40,7 +45,8 @@ function SRA.EPGP.AwardGP(player, itemID, customGP)
   local reason = "SRA v7.0 - Item "..itemID.." - "..(SRA.GetItemLinkSafe(itemID) or itemID)
   EPGP:IncGPBy(player, reason, gpCost)
   local newEP, newGP = EPGP:GetEPGP(player)
-  local newPR = newEP/newGP
+  local newPR = 0
+  if newGP and newGP > 0 then newPR = newEP/newGP else newPR = newEP end
   SendChatMessage(">> EPGP: "..player.." -"..gpCost.." GP por "..SRA.GetItemLinkSafe(itemID).." | EP:"..newEP.." GP:"..newGP.." PR:"..string.format("%.2f",newPR), "OFFICER")
   SendChatMessage(">> Ganaste "..SRA.GetItemLinkSafe(itemID).." -"..gpCost.." GP - PR: "..string.format("%.2f",newPR), "WHISPER", nil, player)
   if SRA_Options.screenshot then Screenshot() end
@@ -52,6 +58,7 @@ function SRA.EPGP.AwardGP(player, itemID, customGP)
   return false
  end
 end
+
 function SRA.EPGP.AddEP(player, amount, reason)
  if not SRA.EPGP.CanUse() then print("|cffff0000SRA EPGP:|r Solo Master puede agregar EP") return false end
  if EPGP and EPGP.IncEPBy then
@@ -61,18 +68,41 @@ function SRA.EPGP.AddEP(player, amount, reason)
  end
  return false
 end
--- Hook DirectLoot para auto descuento GP si es Master
+
+-- Hook DirectLoot para auto descuento GP si es Master - FIX GOD
 local oldDirectLootFn = SRA.DirectLoot
 function SRA.DirectLoot(player, itemID, lootSlot)
  if oldDirectLootFn then oldDirectLootFn(player, itemID, lootSlot) end
  if SRA.EPGP.IsMaster() and SRA_Options.directLoot then
-  SRA.Utils.schedule(1, function() SRA.EPGP.AwardGP(player, itemID) end)
+  -- FIX: schedule no existe en tu Utils
+  if SRA.Utils and SRA.Utils.schedule then
+    SRA.Utils.schedule(1, function() SRA.EPGP.AwardGP(player, itemID) end)
+  else
+    -- Fallback GOD con timer simple
+    local f = CreateFrame("Frame")
+    local t = 0
+    f:SetScript("OnUpdate", function(self, e)
+      t = t + e
+      if t > 1 then
+        self:SetScript("OnUpdate", nil)
+        SRA.EPGP.AwardGP(player, itemID)
+      end
+    end)
+  end
  end
 end
+
+-- FIX 3.3.5a trim
+local function SRA_trim(s)
+  if not s then return "" end
+  if strtrim then return strtrim(s) end
+  return s:match("^%s*(.-)%s*$") or s
+end
+
 SLASH_SRAEPGP1 = "/sraepgp"
 SLASH_SRAEPGP2 = "/sepgp"
 SlashCmdList["SRAEPGP"] = function(msg)
- msg = (msg or ""):trim()
+ msg = SRA_trim(msg or "")
  if msg=="" then
   local EP, GP, PR = SRA.EPGP.GetPlayerEPGP(UnitName("player"))
   if EP then print("|cffff8000SRA EPGP:|r Tu EP: "..EP.." | GP: "..GP.." | PR: "..string.format("%.2f",PR)) else print("|cffff0000SRA EPGP:|r No EPGP - ¿Tienes addon EPGP instalado?") end
@@ -93,4 +123,5 @@ SlashCmdList["SRAEPGP"] = function(msg)
   print("Comandos: /sraepgp (ver tu EP) | /sraepgp award <ID> <jug> [GP] | /sraepgp ep <jug> <cant> | /sraepgp check <jug>")
  end
 end
-print("|cffff8000SRA EPGP Bridge v7.0|r Cargado - Master: "..tostring(SRA.EPGP.IsMaster()).." - Usa /sraepgp")
+
+print("|cffff8000SRA EPGP Bridge v7.0 FIX GOD|r Cargado - Master: "..tostring(SRA.EPGP.IsMaster()).." - Usa /sraepgp")
