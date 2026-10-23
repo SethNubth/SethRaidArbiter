@@ -1,4 +1,31 @@
-Seth: Trinkets v6.3 DB OK
-[SethRaidArbiter BIS] BIS 35x3 FIX GOD cargado
-SethRaidArbiter v8.4.3 GOD MOVIBLE FIX cargado: /sra | /spambuilder
-SethRaidArbiter v1.1.4 FINAL MOVIBLE GOD - Boton martillo listo
+## Interface: 30300
+## Title: |cffff8000SethRaidArbiter|r |cff00ff00v7.0 EPGP GOD|
+## Notes: Master Guild EPGP Full - Anti-mute 11s Taberna 6578 + SR DirectLoot + 35x3 BIS + KRT UI - FIXED 12340
+## Author: Seth + Kader Hybrid + EPGP Master
+## Version: 8.4.3 MOVIBLE GOD
+## SavedVariables: SRA_DB, SRA_Options, SRA_Raids, SRA_SR, SRA_105DB, SRA_EPGPLog, SRA_TrinketDB, SRA_SRReserve
+## OptionalDeps: EPGP, EPGP_LootMaster
+
+# 1- Templates primero (sin esto nada abre)
+Templates.xml
+
+# 2- Utils GOD - trim + schedule (debe ir ANTES de Core)
+Utils.lua
+
+# 3- DBs
+TrinketDB.lua
+BIS.lua
+
+# 4- Core + Bridge
+Core.lua
+EPGP_Bridge.lua
+
+# 5- Funcionalidades
+Loot.lua
+DirectLoot.lua
+SpamBuilder.lua
+Minimap.lua
+
+# 6- UI al final (usa todo lo anterior)
+Menu.lua
+SethRaidArbiter.xml
