@@ -57,7 +57,15 @@ function SRA.ShowMain()
   f:RegisterForDrag("LeftButton")
   f:SetScript("OnDragStart", function() f:StartMoving() end)
   f:SetScript("OnDragStop", function() f:StopMovingOrSizing() end)
-  f:SetBackdrop({bgFile="Interface\\DialogFrame\\UI-DialogBox-Background-Dark", edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", tile=true, tileSize=8, edgeSize=8, insets={top=1,right=1,bottom=1,left=1}})
+  -- FIX GOD QUE ME PEDISTE: Icono y ventana no se van fuera
+  f:SetClampedToScreen(true)
+  f:SetFrameStrata("HIGH")
+  f:SetToplevel(true)
+  -- FIX GOD Backdrop 3.3.5a
+  if f.SetBackdrop then
+    f:SetBackdrop({bgFile="Interface\\DialogFrame\\UI-DialogBox-Background-Dark", edgeFile="Interface\\DialogFrame\\UI-DialogBox-Border", tile=true, tileSize=8, edgeSize=8, insets={top=1,right=1,bottom=1,left=1}})
+    f:SetBackdropColor(0,0,0,0.9)
+  end
   f:Hide()
   
   local title = f:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
@@ -136,3 +144,5 @@ function SRA.ShowMain()
  content:SetHeight(math.abs(y)+50)
  SRA_MainFrame:Show()
 end
+
+print("|cff00ff00[SethRaidArbiter BIS]|r BIS 35x3 FIX GOD cargado - /sra para abrir")
