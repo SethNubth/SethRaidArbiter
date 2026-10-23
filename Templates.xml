@@ -1,6 +1,26 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/..\FrameXML\UI.xsd">
-<Frame name="SRAFrameTemplate" inherits="UIPanelDialogTemplate" parent="UIParent" movable="true" frameStrata="MEDIUM" toplevel="true" hidden="true" clampedToScreen="true" virtual="true"><Size><AbsDimension x="280" y="420" /></Size><Anchors><Anchor point="CENTER" /></Anchors><Layers><Layer level="ARTWORK"><FontString inherits="GameFontNormalSmall" name="$parentTitle" text="|cffff8000SethRaidArbiter|r |cff00ff00v7.0 HYBRID GOD|r"><Anchors><Anchor point="LEFT" relativeTo="$parentTitleBG" relativePoint="LEFT"><Offset><AbsDimension x="8" y="1" /></Offset></Anchor></Anchors></FontString></Layer></Layers><Scripts><OnDragStart>self:StartMoving()</OnDragStart><OnDragStop>self:StopMovingOrSizing()</OnDragStop></Scripts></Frame>
-<Frame name="SRASimpleFrameTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true" virtual="true"><Size><AbsDimension x="850" y="600" /></Size><Anchors><Anchor point="CENTER" /></Anchors><Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true"><TileSize><AbsValue val="8" /></TileSize><EdgeSize><AbsValue val="8" /></EdgeSize><BackgroundInsets><AbsInset top="1" right="1" bottom="1" left="1" /></BackgroundInsets></Backdrop><Scripts><OnDragStart>self:StartMoving()</OnDragStart><OnDragStop>self:StopMovingOrSizing()</OnDragStop></Scripts></Frame>
+<Frame name="SRAFrameTemplate" inherits="UIPanelDialogTemplate" parent="UIParent" movable="true" enableMouse="true" frameStrata="MEDIUM" toplevel="true" hidden="true" clampedToScreen="true" virtual="true">
+<Size><AbsDimension x="280" y="420" /></Size>
+<Anchors><Anchor point="CENTER" /></Anchors>
+<Layers><Layer level="ARTWORK"><FontString inherits="GameFontNormalSmall" name="$parentTitle" text="|cffff8000SethRaidArbiter|r |cff00ff00v7.0 HYBRID GOD|"><Anchors><Anchor point="LEFT" relativeTo="$parentTitleBG" relativePoint="LEFT"><Offset><AbsDimension x="8" y="1" /></Offset></Anchor></Anchors></FontString></Layer></Layers>
+<Scripts>
+<OnLoad>self:RegisterForDrag("LeftButton") self:SetClampedToScreen(true)</OnLoad>
+<OnDragStart>self:StartMoving()</OnDragStart>
+<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+</Scripts>
+</Frame>
+
+<Frame name="SRASimpleFrameTemplate" parent="UIParent" movable="true" enableMouse="true" hidden="true" clampedToScreen="true" virtual="true">
+<Size><AbsDimension x="850" y="600" /></Size>
+<Anchors><Anchor point="CENTER" /></Anchors>
+<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background-Dark" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true"><TileSize><AbsValue val="8" /></TileSize><EdgeSize><AbsValue val="8" /></EdgeSize><BackgroundInsets><AbsInset top="1" right="1" bottom="1" left="1" /></BackgroundInsets></Backdrop>
+<Scripts>
+<OnLoad>self:RegisterForDrag("LeftButton") self:SetClampedToScreen(true) self:SetFrameStrata("HIGH")</OnLoad>
+<OnDragStart>self:StartMoving()</OnDragStart>
+<OnDragStop>self:StopMovingOrSizing()</OnDragStop>
+</Scripts>
+</Frame>
+
 <Button name="SRAButtonTemplate" virtual="true"><Size><AbsDimension x="25" y="25" /></Size><NormalFont style="GameFontNormalSmall" /><DisabledFont style="GameFontDisableSmall" /><HighlightFont style="GameFontHighlightSmall" /><ButtonText name="$parentText"><Anchors><Anchor point="LEFT"><Offset><AbsDimension x="5" y="1" /></Offset></Anchor><Anchor point="RIGHT"><Offset><AbsDimension x="-5" y="1" /></Offset></Anchor></Anchors></ButtonText><Layers><Layer level="BACKGROUND"><Texture name="$parentLeft" file="Interface\Buttons\UI-Panel-Button-Up"><Size><AbsDimension x="12" /></Size><Anchors><Anchor point="TOPLEFT" /><Anchor point="BOTTOMLEFT" /></Anchors><TexCoords left="0" right="0.09374" top="0" bottom="0.6875" /></Texture><Texture name="$parentRight" file="Interface\Buttons\UI-Panel-Button-Up"><Size><AbsDimension x="12" /></Size><Anchors><Anchor point="TOPRIGHT" /><Anchor point="BOTTOMRIGHT" /></Anchors><TexCoords left="0.53125" right="0.625" top="0" bottom="0.6875" /></Texture><Texture name="$parentMiddle" file="Interface\Buttons\UI-Panel-Button-Up"><Size><AbsDimension x="12" /></Size><Anchors><Anchor point="TOPLEFT"><Offset><AbsDimension x="12" y="0" /></Offset></Anchor><Anchor point="BOTTOMRIGHT"><Offset><AbsDimension x="-12" y="0" /></Offset></Anchor></Anchors><TexCoords left="0.09375" right="0.53125" top="0" bottom="0.6875" /></Texture></Layer></Layers><HighlightTexture inherits="UIPanelButtonHighlightTexture" mod="ADD" /><PushedTexture inherits="UIPanelButtonPushedTexture" mod="ADD" /><DisabledTexture inherits="UIPanelButtonDisabledTexture" /><Scripts><OnLoad>self:RegisterForClicks("AnyUp")</OnLoad></Scripts></Button>
 <FontString name="SRAFontString" font="GameFontNormal" justifyH="LEFT" justifyV="MIDDLE" virtual="true" />
 <FontString name="SRAFontStringGray" inherits="GameFontNormalSmall" justifyH="LEFT" justifyV="MIDDLE" virtual="true"><Color r="0.5" g="0.5" b="0.5" a="1" /></FontString>
