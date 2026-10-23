@@ -1,16 +1,4 @@
-## Interface: 30300
-## Title: |cffff8000SethRaidArbiter|r |cff00ff00v7.0 EPGP GOD|r
-## Notes: Master Guild EPGP Full - Anti-mute 11s Taberna 6578 + SR DirectLoot + 35x3 BIS + KRT UI
-## Author: Seth + Kader Hybrid + EPGP Master
-## Version: 7.0.0 EPGP Full
-## SavedVariables: SRA_DB, SRA_Options, SRA_Raids, SRA_SR, SRA_105DB, SRA_EPGPLog
-## OptionalDeps: EPGP, EPGP_LootMaster
-Templates.xml
-SethRaidArbiter.xml
-Utils.lua
-Core.lua
-Loot.lua
-DirectLoot.lua
-SpamBuilder.lua
-Menu.lua
-EPGP_Bridge.lua
+Seth: Trinkets v6.3 DB OK
+[SethRaidArbiter BIS] BIS 35x3 FIX GOD cargado
+SethRaidArbiter v8.4.3 GOD MOVIBLE FIX cargado: /sra | /spambuilder
+SethRaidArbiter v1.1.4 FINAL MOVIBLE GOD - Boton martillo listo
